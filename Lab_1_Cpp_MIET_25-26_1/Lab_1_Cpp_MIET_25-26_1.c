@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,6 +24,7 @@ void add_pers(PERSON** persons, int* pers_vol) {
 	scanf_s("%s", persons[*pers_vol]->fam, 80);
 	printf("\n");
 	(*pers_vol)++;
+	okay;
 }
 
 void remove_pers(PERSON** persons, int* pers_vol) {
