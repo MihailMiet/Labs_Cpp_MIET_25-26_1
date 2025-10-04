@@ -59,10 +59,10 @@ void push(PERSON** persons, int* pers_vol) {
 
 PERSON** pull(PERSON** persons, int* pers_vol) {
 	int byte_data = 0, cur_bytes_vol = 0, cur_pers_ind = 0;
-	mem_clear(persons, pers_vol);
+	PERSON** persons_pull_var = (PERSON**)realloc(persons, ((int)ftell)/sizeof(PERSON*));
+	//mem_clear(persons, pers_vol);
 	FILE* fp = fopen("persons_data.dat", "rb");
 	fseek(fp, 0, SEEK_END);
-	persons = (PERSON**)malloc(((int)ftell)/sizeof(PERSON*));
 	if (!fp) { return; }
 	char* byte_pointer;
 	do {
@@ -85,6 +85,7 @@ PERSON** pull(PERSON** persons, int* pers_vol) {
 		}
 		cur_bytes_vol = 0;
 		cur_pers_ind++;
+		mem_alloc(persons, pers_vol);
 	} while (*byte_pointer != EOF);
 	fclose(fp);
 	*pers_vol = cur_pers_ind;
@@ -247,9 +248,9 @@ void search_pers_status(PERSON** persons, int* pers_vol) {
 }
 
 int main(void) {
-	int exit_flag = 0, option = 0, pers_vol = 0;
+	int exit_flag = 0, option = 0, pers_ind = 0;
 	PERSON** persons = (PERSON**)malloc(sizeof(PERSON*));
-	persons = pull(persons, &pers_vol);
+	persons = pull(persons, &pers_ind);
 	while (exit_flag == 0) {
 		system("cls");
 		printf("\n\n\tAdd a new person ................ 1\n\n\tRemove a person ................ 2\n\n\t"
@@ -259,17 +260,17 @@ int main(void) {
 		system("cls");
 		printf("\n");
 		switch (option) {
-		case 1: add_pers(persons, &pers_vol); break;
-		case 2: remove_pers(persons, &pers_vol); break;
-		case 3: list_pers(persons, &pers_vol); break;
-		case 4: search_pers_name(persons, &pers_vol); break;
-		case 5: search_pers_status(persons, &pers_vol); break;
+		case 1: add_pers(persons, &pers_ind); break;
+		case 2: remove_pers(persons, &pers_ind); break;
+		case 3: list_pers(persons, &pers_ind); break;
+		case 4: search_pers_name(persons, &pers_ind); break;
+		case 5: search_pers_status(persons, &pers_ind); break;
 		case 6: exit_flag = 1; break;
 		default: printf("Invalid option\n\n"); break;
 		}
-		persons = (PERSON**)realloc(persons, (pers_vol + 1) * sizeof(PERSON*));
-		push(persons, &pers_vol);
+		persons = (PERSON**)realloc(persons, (pers_ind + 1) * sizeof(PERSON*));
+		push(persons, &pers_ind);
 	}
-	mem_clear(persons, &pers_vol);
+	mem_clear(persons, &pers_ind);
 	return 0;
 }
