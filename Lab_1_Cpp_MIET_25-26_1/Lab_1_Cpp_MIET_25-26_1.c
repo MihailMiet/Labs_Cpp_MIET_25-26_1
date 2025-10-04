@@ -17,7 +17,7 @@ void mem_alloc(PERSON** pers_arr, int* pers_vol) {
 
 void mem_clear(PERSON** pers_arr, int* pers_vol) {
 	int cur_pers_ind = 0;
-	if (*pers_vol == 0) { return 0; }
+	if (*pers_vol == 0) { return; }
 	while (cur_pers_ind < *pers_vol - 1) {
 		free(pers_arr[cur_pers_ind]->name);
 		free(pers_arr[cur_pers_ind]->fam);
@@ -28,26 +28,66 @@ void mem_clear(PERSON** pers_arr, int* pers_vol) {
 }
 
 void push(PERSON** persons, int* pers_vol) {
-	int bytes_vol = 0;
-	char* byte_pointer = persons;
+	int cur_bytes_vol = 0, cur_pers_ind = 0;
+	char* byte_pointer;
 	FILE* fp = fopen("persons_data.dat", "wb");
-	while (bytes_vol < sizeof(persons)) {
-		putc(*byte_pointer++, fp);
+	if (!fp) { return; }
+	while (cur_pers_ind < *pers_vol) {
+		byte_pointer = persons[cur_pers_ind]->name;
+		printf("%d", sizeof(*(persons[cur_pers_ind]->name)));
+		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->name))) {
+			putc(*byte_pointer++, fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		byte_pointer = persons[cur_pers_ind]->fam;
+		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->fam))) {
+			putc(*byte_pointer++, fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		byte_pointer = persons[cur_pers_ind]->status;
+		while (cur_bytes_vol < sizeof(int)) {
+			putc(*byte_pointer++, fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		cur_pers_ind++;
 	}
 	fclose(fp);
 }
 
 PERSON** pull(PERSON** persons, int* pers_vol) {
-	int byte_data = 0;
-	mem_clear(persons, *pers_vol);
-	persons = (PERSON**)malloc(sizeof(PERSON*));
+	int byte_data = 0, cur_bytes_vol = 0, cur_pers_ind = 0;
+	mem_clear(persons, pers_vol);
 	FILE* fp = fopen("persons_data.dat", "rb");
-	char* arr_byte_pointer = persons;
-	while ((byte_data = getc(fp)) != EOF) {
-		*arr_byte_pointer = byte_data;
-		arr_byte_pointer++;
-	}
+	fseek(fp, 0, SEEK_END);
+	persons = (PERSON**)malloc(((int)ftell)/sizeof(PERSON*));
+	if (!fp) { return; }
+	char* byte_pointer;
+	do {
+		byte_pointer = persons[cur_pers_ind]->name;
+		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->name))) {
+			*byte_pointer++ = getc(fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		byte_pointer = persons[cur_pers_ind]->fam;
+		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->fam))) {
+			*byte_pointer++ = getc(fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		byte_pointer = persons[cur_pers_ind]->status;
+		while (cur_bytes_vol < sizeof(int)) {
+			*byte_pointer++ = getc(fp);
+			cur_bytes_vol++;
+		}
+		cur_bytes_vol = 0;
+		cur_pers_ind++;
+	} while (*byte_pointer != EOF);
 	fclose(fp);
+	*pers_vol = cur_pers_ind;
 	return(persons);
 }
 
@@ -104,7 +144,7 @@ void remove_pers(PERSON** persons, int* pers_vol) {
 		scanf_s("%d", &needed_pers);
 		while (cur_pers_ind < matching_pers_vol) {
 			if (persons[cur_pers_ind] == matching_pers[needed_pers - 1]) {
-				while (cur_pers_ind < *pers_vol - 2) {
+				while (cur_pers_ind < *pers_vol - 1) {
 					persons[cur_pers_ind] = persons[cur_pers_ind + 1];
 					persons[cur_pers_ind + 1] = pers_void_plug;
 					cur_pers_ind++;
@@ -114,12 +154,13 @@ void remove_pers(PERSON** persons, int* pers_vol) {
 		}
 		free(pers_void_plug);
 	}
-	mem_clear(matching_pers, *pers_vol);
+	mem_clear(matching_pers, pers_vol);
 	(*pers_vol)--;
 }
 
 void list_pers(PERSON** persons, int* pers_vol) {
 	int cur_pers_ind = 0;
+	char ch[4];
 	printf("\n\n");
 	printf("%*s", 4, "");
 	printf("Pers");
@@ -140,6 +181,8 @@ void list_pers(PERSON** persons, int* pers_vol) {
 		printf("%-30d\n\n", *(persons[cur_pers_ind]->status));
 		cur_pers_ind++;
 	}
+	printf("Press any key: ");
+	scanf_s("%s", &ch, 4);
 }
 
 void search_pers_name(PERSON** persons, int* pers_vol) {
@@ -206,7 +249,7 @@ void search_pers_status(PERSON** persons, int* pers_vol) {
 int main(void) {
 	int exit_flag = 0, option = 0, pers_vol = 0;
 	PERSON** persons = (PERSON**)malloc(sizeof(PERSON*));
-	pull(persons, &pers_vol);
+	persons = pull(persons, &pers_vol);
 	while (exit_flag == 0) {
 		system("cls");
 		printf("\n\n\tAdd a new person ................ 1\n\n\tRemove a person ................ 2\n\n\t"
@@ -224,7 +267,7 @@ int main(void) {
 		case 6: exit_flag = 1; break;
 		default: printf("Invalid option\n\n"); break;
 		}
-		persons = (PERSON**)realloc(persons, (pers_vol) * sizeof(PERSON*));
+		persons = (PERSON**)realloc(persons, (pers_vol + 1) * sizeof(PERSON*));
 		push(persons, &pers_vol);
 	}
 	mem_clear(persons, &pers_vol);
