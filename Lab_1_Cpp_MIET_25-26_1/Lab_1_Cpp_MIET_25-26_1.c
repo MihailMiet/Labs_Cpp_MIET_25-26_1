@@ -34,7 +34,7 @@ void push(PERSON** persons, int* pers_vol) {
 	if (!fp) { return; }
 	while (cur_pers_ind < *pers_vol) {
 		byte_pointer = persons[cur_pers_ind]->name;
-		printf("%d", sizeof(*(persons[cur_pers_ind]->name)));
+		printf("%ud", sizeof(*(persons[cur_pers_ind]->name)));
 		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->name))) {
 			putc(*byte_pointer++, fp);
 			cur_bytes_vol++;
@@ -57,39 +57,51 @@ void push(PERSON** persons, int* pers_vol) {
 	fclose(fp);
 }
 
-PERSON** pull(PERSON** persons, int* pers_vol) {
-	int byte_data = 0, cur_bytes_vol = 0, cur_pers_ind = 0;
-	PERSON** persons_pull_var = (PERSON**)realloc(persons, ((int)ftell)/sizeof(PERSON*));
-	//mem_clear(persons, pers_vol);
+long long int get_file_length() {
+	long long int file_size = 0;
 	FILE* fp = fopen("persons_data.dat", "rb");
 	fseek(fp, 0, SEEK_END);
+	file_size = ftell(fp);
+	rewind(fp);
+	fclose(fp);
+	return file_size;
+}
+
+void pull(PERSON*** persons, int* pers_vol) {
+	int byte_data = 0, cur_bytes_vol = 0, cur_pers_ind = 0;
+	long long int file_size = 0;
+	file_size = get_file_length();
+	FILE* fp = fopen("persons_data.dat", "rb");
 	if (!fp) { return; }
+	*pers_vol = (int)((file_size / sizeof(PERSON)) * sizeof(PERSON*));
+	*persons = (PERSON**)realloc(persons, (file_size / sizeof(PERSON)) * sizeof(PERSON*));
 	char* byte_pointer;
 	do {
-		byte_pointer = persons[cur_pers_ind]->name;
-		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->name))) {
+		mem_alloc(persons, &cur_pers_ind);
+		byte_pointer = (*persons)[cur_pers_ind]->name;
+		while (cur_bytes_vol < sizeof(*((*persons)[cur_pers_ind]->name))) {
 			*byte_pointer++ = getc(fp);
 			cur_bytes_vol++;
 		}
 		cur_bytes_vol = 0;
-		byte_pointer = persons[cur_pers_ind]->fam;
-		while (cur_bytes_vol < sizeof(*(persons[cur_pers_ind]->fam))) {
+		byte_pointer = (*persons)[cur_pers_ind]->fam;
+		while (cur_bytes_vol < sizeof(*((*persons)[cur_pers_ind]->fam))) {
 			*byte_pointer++ = getc(fp);
 			cur_bytes_vol++;
 		}
 		cur_bytes_vol = 0;
-		byte_pointer = persons[cur_pers_ind]->status;
+		byte_pointer = (*persons)[cur_pers_ind]->status;
 		while (cur_bytes_vol < sizeof(int)) {
 			*byte_pointer++ = getc(fp);
 			cur_bytes_vol++;
 		}
 		cur_bytes_vol = 0;
 		cur_pers_ind++;
-		mem_alloc(persons, pers_vol);
+		mem_alloc((*persons), pers_vol);
 	} while (*byte_pointer != EOF);
 	fclose(fp);
 	*pers_vol = cur_pers_ind;
-	return(persons);
+	//return(persons);
 }
 
 void add_pers(PERSON** persons, int* pers_vol) {
@@ -249,8 +261,8 @@ void search_pers_status(PERSON** persons, int* pers_vol) {
 
 int main(void) {
 	int exit_flag = 0, option = 0, pers_ind = 0;
-	PERSON** persons = (PERSON**)malloc(sizeof(PERSON*));
-	persons = pull(persons, &pers_ind);
+	PERSON** persons = (PERSON**)malloc(2 * sizeof(PERSON*));
+	pull(&persons, &pers_ind);
 	while (exit_flag == 0) {
 		system("cls");
 		printf("\n\n\tAdd a new person ................ 1\n\n\tRemove a person ................ 2\n\n\t"
