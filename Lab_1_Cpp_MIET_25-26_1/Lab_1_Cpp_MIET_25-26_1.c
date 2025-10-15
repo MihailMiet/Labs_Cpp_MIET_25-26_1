@@ -147,7 +147,7 @@ void remove_pers(PERSON** persons, int* pers_vol) {
 		}
 	}
 	mem_clear(*matching_pers, &matching_pers_vol);
-	//free(matching_pers);
+	free(matching_pers);
 	free(var);
 	(*pers_vol)--;
 }
@@ -274,6 +274,7 @@ int main(void) {
 		printf("\n\n\tSearch for a person(name) ............. 4");
 		printf("\n\n\tSearch for a person (status) ........ 5");
 		printf("\n\n\tExit .............................. 6\n\n");
+		printf("\n\n\n\tOption: ");
 		scanf_s("%d", &option);
 		system("cls");
 		printf("\n");
@@ -286,10 +287,10 @@ int main(void) {
 			case 6: exit_flag = 1; break;
 			default: if (invalid_or_escape_option_loop(option, 6)) { break; }
 		}
-		if (!pers_ind) { *persons = (PERSON**)realloc(persons, pers_ind * sizeof(PERSON*)); }
+		if (pers_ind != 0) { *persons = (PERSON**)realloc(*persons, pers_ind * sizeof(PERSON*)); }
 		push((*persons), &pers_ind);
 	}
-	if (!pers_ind) {
+	if (pers_ind != 0) {
 		mem_clear(*persons, &pers_ind);
 		free(persons);
 	}
