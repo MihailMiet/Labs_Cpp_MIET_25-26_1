@@ -288,7 +288,7 @@ int main(void) {
 			case 6: exit_flag = 1; break;
 			default: if (invalid_or_escape_option_loop(option, 6)) { break; }
 		}
-		if (pers_ind != 0) { *persons = (PERSON**)realloc(*persons, pers_ind * sizeof(PERSON*)); }
+		*persons = (PERSON**)realloc(*persons, (pers_ind + 1) * sizeof(PERSON*));
 		push((*persons), &pers_ind);
 	}
 	if (pers_ind != 0) {
