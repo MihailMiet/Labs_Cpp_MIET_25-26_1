@@ -274,6 +274,7 @@ int main(void) {
 		printf("\n\n\tSearch for a person(name) ............. 4");
 		printf("\n\n\tSearch for a person (status) ........ 5");
 		printf("\n\n\tExit .............................. 6\n\n");
+
 		printf("\n\n\n\tOption: ");
 		scanf_s("%d", &option);
 		system("cls");
