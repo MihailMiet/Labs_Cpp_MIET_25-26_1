@@ -4,7 +4,6 @@
 #include <vector>
 #include <cstring>
 #include <locale.h>
-#include <windows.h>
 
 using namespace std;
 
@@ -12,7 +11,6 @@ const char* DATABASE_FILE = "prepod_database.dat";
 
 inline void WaitEnter() { 
     cout << "Press Enter to continue...";
-    Sleep(100);
     std::cin.ignore(80, '\n');
     std::cin.get();
 }
