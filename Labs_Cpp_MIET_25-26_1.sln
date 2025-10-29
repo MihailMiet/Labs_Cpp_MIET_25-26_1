@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_1_Cpp_MIET_25-26_1", "L
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_2_Cpp_MIET_25-26_1", "Lab_2_Cpp_MIET_25-26_1\Lab_2_Cpp_MIET_25-26_1.vcxproj", "{F9F5FEE1-5BE7-4CA4-B7CC-409C87571BC3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_3_Cpp_MIET_25-26_1", "Lab_3_Cpp_MIET_25-26_1\Lab_3_Cpp_MIET_25-26_1.vcxproj", "{356A25DB-CE51-4F9A-A081-44B6D15A6556}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{F9F5FEE1-5BE7-4CA4-B7CC-409C87571BC3}.Release|x64.Build.0 = Release|x64
 		{F9F5FEE1-5BE7-4CA4-B7CC-409C87571BC3}.Release|x86.ActiveCfg = Release|Win32
 		{F9F5FEE1-5BE7-4CA4-B7CC-409C87571BC3}.Release|x86.Build.0 = Release|Win32
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Debug|x64.ActiveCfg = Debug|x64
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Debug|x64.Build.0 = Debug|x64
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Debug|x86.ActiveCfg = Debug|Win32
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Debug|x86.Build.0 = Debug|Win32
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Release|x64.ActiveCfg = Release|x64
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Release|x64.Build.0 = Release|x64
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Release|x86.ActiveCfg = Release|Win32
+		{356A25DB-CE51-4F9A-A081-44B6D15A6556}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
